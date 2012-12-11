@@ -1,0 +1,148 @@
+#!/usr/bin/env ruby
+require 'gli'
+include GLI::App
+
+program_desc 'Simple CLI for Rdio'
+
+version Rdio::VERSION
+
+def apple_script(cmd)
+  `osascript -e '#{cmd}'`
+end
+def tell_rdio(cmd)
+  apple_script "tell app \"Rdio\" to #{cmd}"
+end
+
+def current_track
+  tell_rdio('name of the current track').gsub(/\n/, '')
+end
+
+def current_artist
+  tell_rdio('artist of the current track').gsub(/\n/, '')
+end
+
+def current_album
+  tell_rdio('album of the current track').gsub(/\n/, '')
+end
+
+def display_track
+  puts "Now Playing: #{current_track} / #{current_artist} / #{current_album}"
+end
+
+def set_volume(pct = 30)
+  tell_rdio "set the sound volume to #{pct}"
+end
+
+def rdio_url
+  path = tell_rdio 'rdio url of the current track'
+  "http://www.rdio.com#{path}"
+end
+
+desc 'Plays the current track'
+command :play do |c|
+  c.action do |global_options,options,args|
+    tell_rdio "play"
+  end
+end
+
+desc 'Pause the player'
+command :pause do |c|
+  c.action do |global_options,options,args|
+    tell_rdio "pause"
+  end
+end
+
+desc 'Toggle playback'
+command :toggle do |c|
+  c.action do |global_options,options,args|
+    tell_rdio "playpause"
+  end
+end
+
+desc 'Display the current track info'
+command :current do |c|
+  c.action do |global_options,options,args|
+    display_track
+  end
+end
+
+desc 'Skip to next track'
+command :next do |c|
+  c.action do |global_options,options,args|
+    tell_rdio "next_track"
+  end
+end
+
+desc 'Play previous track'
+command :previous, :prev do |c|
+  c.action do |global_options,options,args|
+    tell_rdio "previous track"
+  end
+end
+
+desc 'Open the current track in Rdio player'
+command :browse do |c|
+  c.action do |global_options,options,args|
+    exec "open '#{rdio_url}'"
+  end
+end
+
+desc 'Set volume for player'
+arg_name 'level'
+command :volume, :vol do |c|
+  c.action do |global_options,options,args|
+    level = args.shift.to_i
+    set_volume level
+  end
+end
+
+desc 'Mute the Rdio player'
+command :mute do |c|
+  c.action do |global_options,options,args|
+    set_volume 0
+  end
+end
+
+desc 'Get a shareable link for the current track'
+command :link do |c|
+  c.action do |global_options,options,args|
+    puts rdio_url
+  end
+end
+
+desc "Get CLI and application version info"
+command :version, :v do |c|
+  c.action do |global_options,options,args|
+    puts "rdio-cli #{Rdio::VERSION} / Rdio #{apple_script('get version of application "Rdio"')}"
+  end
+end
+
+desc "Quit Rdio"
+command :quit, :q do |c|
+  c.action do |global_options,options,args|
+    apple_script "tell application \"Rdio\" to quit" 
+  end
+end
+
+pre do |global,command,options,args|
+  # Pre logic here
+  # Return true to proceed; false to abourt and not call the
+  # chosen command
+  # Use skips_pre before a command to skip this block
+  # on that command only
+  true
+end
+
+post do |global,command,options,args|
+  # Post logic here
+  # Use skips_post before a command to skip this
+  # block on that command only
+end
+
+on_error do |exception|
+  # Error logic here
+  # return false to skip default error handling
+  true
+end
+
+exit run(ARGV)

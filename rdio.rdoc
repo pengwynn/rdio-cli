@@ -1,0 +1,5 @@
+= rdio
+
+Generate this with
+    rdio rdoc
+After you have described your command line interface
