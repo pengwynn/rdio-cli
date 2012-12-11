@@ -3,6 +3,7 @@ PATH
   specs:
     rdio-cli (0.0.1)
       gli (= 2.5.2)
+      highline (~> 1.6.15)
 
 GEM
   remote: http://rubygems.org/
@@ -24,6 +25,7 @@ GEM
     gherkin (2.11.5)
       json (>= 1.4.6)
     gli (2.5.2)
+    highline (1.6.15)
     json (1.7.5)
     rake (10.0.1)
     rdoc (3.12)

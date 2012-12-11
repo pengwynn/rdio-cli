@@ -20,6 +20,7 @@ lib/rdio.rb
   s.rdoc_options << '--title' << 'rdio' << '--main' << 'README.rdoc' << '-ri'
   s.bindir = 'bin'
   s.executables << 'rdio'
+  s.add_dependency('highline', '~> 1.6.15')
   s.add_development_dependency('rake')
   s.add_development_dependency('rdoc')
   s.add_development_dependency('aruba')
