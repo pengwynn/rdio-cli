@@ -8,7 +8,6 @@ spec = Gem::Specification.new do |s|
   s.homepage = 'http://wynnnetherland.com'
   s.platform = Gem::Platform::RUBY
   s.summary = 'CLI for Rdio for Mac'
-# Add your other files here if you make them
   s.files = %w(
 bin/rdio
 lib/rdio/version.rb

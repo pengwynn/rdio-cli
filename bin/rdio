@@ -118,7 +118,7 @@ desc 'Skip to next track'
 skips_pre
 command :next do |c|
   c.action do |global_options,options,args|
-    tell_rdio "next_track"
+    tell_rdio "next track"
   end
 end
 
