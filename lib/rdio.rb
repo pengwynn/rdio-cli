@@ -67,8 +67,13 @@ module Rdio
     tell_rdio('album of the current track').gsub(/\n/, '')
   end
 
-  def self.display_track
-    puts "Now Playing: #{current_track} / #{current_artist} / #{current_album}"
+  def self.display_track(text)
+    text = "Now playing: %{track} / %{artist} / %{album}" if text.nil?
+    puts text % {
+      :artist => current_artist,
+      :track  => current_track,
+      :album  => current_album
+    }
   end
 
   def self.set_volume(pct = 30)
@@ -114,7 +119,7 @@ module Rdio
   skips_pre
   command :current do |c|
     c.action do |global_options,options,args|
-      display_track
+      display_track args.first
     end
   end
 
