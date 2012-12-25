@@ -118,9 +118,10 @@ module Rdio
   desc 'Display the current track info'
   long_desc %(
     Display current track, artist, and album info. Pass
-    a formatting string for custom output using
+    format string for custom output using
     %{track}, %{artist}, and %{album} placeholders.
   )
+  arg_name 'format'
   skips_pre
   command :current do |c|
     c.action do |global_options,options,args|

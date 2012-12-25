@@ -11,6 +11,7 @@ spec = Gem::Specification.new do |s|
   s.files = %w(LICENSE.md README.md Rakefile rdio-cli.gemspec)
   s.files += Dir.glob("lib/**/*.rb")
   s.files += Dir.glob("bin/**/*")
+  s.files += Dir.glob("etc/**/*")
   s.require_paths << 'lib'
   s.has_rdoc = true
   s.extra_rdoc_files = ['README.rdoc','rdio.rdoc']
