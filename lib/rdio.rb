@@ -86,6 +86,18 @@ module Rdio
     "http://www.rdio.com#{path}"
   end
 
+  def self.current_track_key
+    data = api.call 'getObjectFromUrl', { :url => rdio_url }
+
+    data['result']['key']
+  end
+
+  def self.add_to_collection(tracks)
+    tracks = Array(tracks)
+
+    api.call 'addToCollection', { :keys => tracks.join(',') }
+  end
+
   config_file '.rdio'
 
   flag :consumer_key
@@ -219,6 +231,18 @@ module Rdio
     c.action do |global_options,options,args|
       user = api.call('currentUser')['result']
       say "#{user['firstName']} #{user['lastName']}"
+    end
+  end
+
+  desc 'Add the current track or album to your collection'
+  command :snag do |c|
+    c.action do |global_options,options,args|
+      case args.shift
+      when 'album'
+        say 'Not implemented'
+      when nil
+        add_to_collection current_track_key
+      end
     end
   end
 
