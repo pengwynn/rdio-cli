@@ -14,6 +14,7 @@ improve this project.
 8. Add, commit, and push your changes.
 9. [Submit a pull request.][pr]
 
+[free-sw]: http://www.fsf.org/licensing/essays/free-sw.html
 [fork]: http://help.github.com/fork-a-repo/
 [branch]: http://learn.github.com/p/branching.html
 [pr]: http://help.github.com/send-pull-requests/
