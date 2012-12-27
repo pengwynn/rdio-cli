@@ -1,9 +1,10 @@
 require 'gli'
-require 'highline/import'
 require 'yaml'
+require 'launchy'
 
 require 'api'
 require 'rdio/version'
+require 'highline/import'
 
 module Rdio
   extend GLI::App
@@ -21,15 +22,14 @@ module Rdio
 
   def self.authorize_api
     url = api.begin_authentication('oob')
-    puts url
-    ask 'Copy the four digit code from your browser. ENTER to continue.'
-    `open #{url}`
-    code = ask 'Code:'
+    ask "Copy the four digit code from your browser. [ENTER] to continue. "
+    Launchy.open url
+    code = ask 'Code: '
     @access_token, @access_secret = @api.complete_authentication(code)
 
     write_config
 
-    puts "You're all set. see `rdio help` for usage"
+    say "You're all set. see `rdio help` for usage"
   end
 
   def self.rdio_config
@@ -42,7 +42,8 @@ module Rdio
   end
 
   def self.write_config
-    File.open( @config_file, 'w' ) do |out|
+    p = File.join(File.expand_path(ENV['HOME']), '.rdio')
+    File.open(p, 'w' ) do |out|
       YAML.dump rdio_config, out
     end
   end
@@ -69,11 +70,11 @@ module Rdio
 
   def self.display_track(text)
     text = "Now playing: %{track} / %{artist} / %{album}" if text.nil?
-    puts text % {
+    say (text % {
       :artist => current_artist,
       :track  => current_track,
       :album  => current_album
-    }
+    })
   end
 
   def self.set_volume(pct = 30)
@@ -175,7 +176,7 @@ module Rdio
   skips_pre
   command :link do |c|
     c.action do |global_options,options,args|
-      puts rdio_url
+      say rdio_url
     end
   end
 
@@ -183,7 +184,7 @@ module Rdio
   skips_pre
   command :version, :v do |c|
     c.action do |global_options,options,args|
-      puts "rdio-cli #{Rdio::VERSION} / Rdio #{apple_script('get version of application "Rdio"')}"
+      say "rdio-cli #{Rdio::VERSION} / Rdio #{apple_script('get version of application "Rdio"')}"
     end
   end
 
@@ -199,8 +200,11 @@ module Rdio
   skips_pre
   command :authorize, :auth do |c|
     c.action do |global_options,options,args|
-      @consumer_key = ask 'Enter Rdio consumer key'
-      @consumer_secret = ask 'Enter Rdio consumer secret'
+      require 'highline/import'
+      say "To access your Rdio account, you'll need to get some API keys. "
+      say "See http://developer.rdio.com for details. "
+      @consumer_key = ask 'Enter your Rdio API key: '
+      @consumer_secret = ask 'Enter your Rdio API secret: '
 
       if @consumer_key && @consumer_secret
         authorize_api
@@ -214,7 +218,7 @@ module Rdio
   command :user do |c|
     c.action do |global_options,options,args|
       user = api.call('currentUser')['result']
-      puts "#{user['firstName']} #{user['lastName']}"
+      say "#{user['firstName']} #{user['lastName']}"
     end
   end
 
@@ -229,7 +233,7 @@ module Rdio
     @access_token    = global[:access_token]
     @access_secret   = global[:access_secret]
     if api.token.compact.empty?
-      puts 'Rdio credentials not found. Please run: rdio authorize'
+      say 'Rdio credentials not found. Please run: rdio authorize'
 
       false
     else

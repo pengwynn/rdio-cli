@@ -19,10 +19,9 @@ spec = Gem::Specification.new do |s|
   s.bindir = 'bin'
   s.executables << 'rdio'
   s.add_dependency('highline', '~> 1.6.15')
-  s.add_dependency('highline', '~> 1.6.15')
+  s.add_dependency('launchy', '~> 2.1.2')
   s.add_development_dependency('rake')
   s.add_development_dependency('rdoc')
-  s.add_development_dependency('aruba')
   s.add_development_dependency('rspec', '~> 2.12.0')
   s.add_development_dependency('rspec-mocks', '~> 2.12.0')
   s.add_runtime_dependency('gli','2.5.2')

@@ -14,14 +14,44 @@ describe Rdio do
     $stdout = @old_stdout
   end
 
+  context "with an empty config file" do
+    before do
+      FileUtils.rm_f Dir.glob('tmp/fakehome/.rdio')
+    end
+
+    it "prompts for Rdio keys" do
+      HighLine.any_instance.should_receive(:say).twice
+      HighLine.any_instance.should_receive(:ask).with("Enter your Rdio API key: ").and_return('vh5150')
+      HighLine.any_instance.should_receive(:ask).with("Enter your Rdio API secret: ").and_return('0U812')
+      Api.any_instance.should_receive(:begin_authentication).with('oob').and_return('http://api.developer.com/confirm/blah')
+      Launchy.should_receive(:open)
+      HighLine.any_instance.should_receive(:ask).
+        with("Copy the four digit code from your browser. [ENTER] to continue. ").
+        and_return("\n")
+      HighLine.any_instance.should_receive(:ask).
+        with("Code: ").
+        and_return("1337")
+      Api.any_instance.should_receive(:complete_authentication).with('1337').and_return(['abcdefg', '1234567890'])
+      HighLine.any_instance.should_receive(:say)
+
+      Rdio.run %w(authorize)
+
+      config = YAML.load_file(File.expand_path(File.join(ENV['HOME'], '.rdio')))
+      expect(config[:access_token]).to eq('abcdefg')
+      expect(config[:access_secret]).to eq('1234567890')
+
+    end
+  end
+
   it "returns now playing info" do
     Rdio.stub(:current_artist).and_return 'Johnny Cash'
     Rdio.stub(:current_track).and_return 'Hurt'
     Rdio.stub(:current_album).and_return 'The Man Comes Around'
 
-    Rdio.run %w(current)
+    HighLine.any_instance.should_receive(:say).
+      with("Now playing: Hurt / Johnny Cash / The Man Comes Around")
 
-    expect($stdout.string).to eq("Now playing: Hurt / Johnny Cash / The Man Comes Around\n")
+    Rdio.run %w(current)
   end
 
   it "returns custom formatted now playing info" do
@@ -29,9 +59,10 @@ describe Rdio do
     Rdio.stub(:current_track).and_return 'Hurt'
     Rdio.stub(:current_album).and_return 'The Man Comes Around'
 
-    Rdio.run ["current", %Q(Now rocking %{track} by %{artist} from the album %{album})]
+    HighLine.any_instance.should_receive(:say).
+      with("Now rocking Hurt by Johnny Cash from the album The Man Comes Around")
 
-    expect($stdout.string).to eq("Now rocking Hurt by Johnny Cash from the album The Man Comes Around\n")
+    Rdio.run ["current", %Q(Now rocking %{track} by %{artist} from the album %{album})]
   end
 
 end
