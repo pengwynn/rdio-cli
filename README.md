@@ -16,7 +16,7 @@ Now playing: All The Roadrunning / Mark Knopfler And Emmylou Harris / Real Live 
 ```
 
 ```bash
-rdio current "♫ %{track} ♫"
+$ rdio current "♫ %{track} ♫"
 ♫ All The Roadrunning ♫
 ```
 
