@@ -81,9 +81,9 @@ module Rdio
     tell_rdio "set the sound volume to #{pct}"
   end
 
-  def self.rdio_url
+  def self.rdio_url(protocol = 'http')
     path = tell_rdio 'rdio url of the current track'
-    "http://www.rdio.com#{path}"
+    "#{protocol}://www.rdio.com#{path}"
   end
 
   def self.current_track_key
@@ -162,7 +162,8 @@ module Rdio
   skips_pre
   command :browse do |c|
     c.action do |global_options,options,args|
-      exec "open '#{rdio_url}'"
+      protocol = args.first == 'app' ? 'rdio' : 'http'
+      exec "open '#{rdio_url protocol}'"
     end
   end
 
