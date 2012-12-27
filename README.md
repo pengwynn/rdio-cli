@@ -10,6 +10,8 @@ gem install rdio-cli
 
 ## Usage
 
+Rdio CLI is powered by [GLI][] and has a Git-like (sub)command interface:
+
 ```bash
 $ rdio current
 Now playing: All The Roadrunning / Mark Knopfler And Emmylou Harris / Real Live Roadrunning
@@ -81,3 +83,4 @@ Copyright (c) 2012 Wynn Netherland. See [LICENSE][] for details.
 [rdio-simple]: https://github.com/rdio/rdio-simple
 [Drew Stokes]: https://github.com/dstokes
 [node-rdio]: https://github.com/dstokes/rdio-cli
+[GLI]: https://github.com/davetron5000/gli
