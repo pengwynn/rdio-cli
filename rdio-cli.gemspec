@@ -8,13 +8,12 @@ spec = Gem::Specification.new do |s|
   s.homepage = 'http://wynnnetherland.com'
   s.platform = Gem::Platform::RUBY
   s.summary = 'CLI for Rdio for Mac'
-  s.files = %w(LICENSE.md README.md Rakefile rdio-cli.gemspec)
+  s.files = %w(CONTRIBUTING.md LICENSE.md README.md Rakefile rdio-cli.gemspec)
   s.files += Dir.glob("lib/**/*.rb")
   s.files += Dir.glob("bin/**/*")
   s.files += Dir.glob("etc/**/*")
   s.require_paths << 'lib'
-  s.has_rdoc = true
-  s.extra_rdoc_files = ['README.rdoc','rdio.rdoc']
+  s.has_rdoc = false
   s.rdoc_options << '--title' << 'rdio' << '--main' << 'README.rdoc' << '-ri'
   s.bindir = 'bin'
   s.executables << 'rdio'
