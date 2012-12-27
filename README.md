@@ -56,8 +56,16 @@ COMMANDS
 * `[ ]` Follow a user
 * `[ ]` Tail a user?
 
+## Credits
+
+* Uses Rdio's [rdio-simple][] library for API access.
+* Inspired by [Drew Stokes][]'s [Node version][node-rdio].
+
 ## Copyright
 Copyright (c) 2012 Wynn Netherland. See [LICENSE][] for details.
 
 [rdio]: http://rdio.com
 [LICENSE]: https://github.com/pengwynn/rdio-cli/blob/master/LICENSE.md
+[rdio-simple]: https://github.com/rdio/rdio-simple
+[Drew Stokes]: https://github.com/dstokes
+[node-rdio]: https://github.com/dstokes/rdio-cli
