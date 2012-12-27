@@ -24,10 +24,8 @@ $ rdio current "♫ %{track} ♫"
 
 ### Full usage help
 
-```shell
-
+```
 $ rdio help
-
 NAME
     rdio - Simple CLI for Rdio
 
@@ -38,10 +36,10 @@ VERSION
     0.0.1
 
 GLOBAL OPTIONS
-    --access_secret=arg   - (default: none)
-    --access_token=arg    - (default: none)
-    --consumer_key=arg    - (default: none)
-    --consumer_secret=arg - (default: none)
+    --access_secret=arg   - (default: )
+    --access_token=arg    - (default: )
+    --consumer_key=arg    - (default: )
+    --consumer_secret=arg - (default: )
     --help                - Show this message
     --version             -
 
@@ -58,6 +56,7 @@ COMMANDS
     play            - Plays the current track
     previous, prev  - Play previous track
     quit, q         - Quit Rdio
+    snag            - Add the current track or album to your collection
     toggle          - Toggle playback
     user            - Show the current Rdio user
     version, v      - Get CLI and application version info
