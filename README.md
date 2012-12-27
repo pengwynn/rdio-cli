@@ -1,6 +1,7 @@
 # Rdio CLI
 
-A simple command line interface for [Rdio][].
+A simple command line interface for [Rdio][]. Requires the desktop app to be
+installed since playback controls talk to the app via AppleScript.
 
 ## Installation
 
