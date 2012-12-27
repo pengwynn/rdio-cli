@@ -10,6 +10,18 @@ gem install rdio-cli
 
 ## Usage
 
+```bash
+$ rdio current
+Now playing: All The Roadrunning / Mark Knopfler And Emmylou Harris / Real Live Roadrunning
+```
+
+```bash
+rdio current "♫ %{track} ♫"
+♫ All The Roadrunning ♫
+```
+
+### Full usage help
+
 ```shell
 
 $ rdio help
