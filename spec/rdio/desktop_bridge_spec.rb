@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Rdio::DesktopBridge' do
+describe Rdio::DesktopBridge do
 
   before do
     @bridge = Rdio::DesktopBridge.new

@@ -116,6 +116,7 @@ describe Rdio do
 
     Rdio.run %w(q)
   end
+
   context "when authenticated" do
 
     it "snags the currently playing track to your collection" do

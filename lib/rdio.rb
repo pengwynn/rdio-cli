@@ -72,6 +72,7 @@ module Rdio
   flag :access_token
   flag :access_secret
 
+  skips_pre
   desc 'Plays the current track'
   command :play do |c|
     c.action do |global_options,options,args|
@@ -79,22 +80,23 @@ module Rdio
     end
   end
 
-  desc 'Pause the player'
   skips_pre
+  desc 'Pause the player'
   command :pause do |c|
     c.action do |global_options,options,args|
       bridge.pause
     end
   end
 
-  desc 'Toggle playback'
   skips_pre
+  desc 'Toggle playback'
   command :toggle do |c|
     c.action do |global_options,options,args|
       bridge.toggle
     end
   end
 
+  skips_pre
   desc 'Display the current track info'
   long_desc %(
     Display current track, artist, and album info. Pass
@@ -102,31 +104,30 @@ module Rdio
     %{track}, %{artist}, and %{album} placeholders.
   )
   arg_name 'format'
-  skips_pre
   command :current do |c|
     c.action do |global_options,options,args|
       say bridge.now_playing(args.first)
     end
   end
 
-  desc 'Skip to next track'
   skips_pre
+  desc 'Skip to next track'
   command :next do |c|
     c.action do |global_options,options,args|
       bridge.next_track
     end
   end
 
-  desc 'Play previous track'
   skips_pre
+  desc 'Play previous track'
   command :previous, :prev do |c|
     c.action do |global_options,options,args|
       bridge.previous_track
     end
   end
 
-  desc 'Open the current track in Rdio player'
   skips_pre
+  desc 'Open the current track in Rdio player'
   command :browse do |c|
     c.action do |global_options,options,args|
       protocol = args.first == 'app' ? 'rdio' : 'http'
@@ -134,8 +135,8 @@ module Rdio
     end
   end
 
-  desc 'Set volume for player'
   skips_pre
+  desc 'Set volume for player'
   arg_name 'level'
   command :volume, :vol do |c|
     c.action do |global_options,options,args|
@@ -144,40 +145,40 @@ module Rdio
     end
   end
 
-  desc 'Mute the Rdio player'
   skips_pre
+  desc 'Mute the Rdio player'
   command :mute do |c|
     c.action do |global_options,options,args|
       brdige.set_volume 0
     end
   end
 
-  desc 'Get a shareable link for the current track'
   skips_pre
+  desc 'Get a shareable link for the current track'
   command :link do |c|
     c.action do |global_options,options,args|
       say bridge.current_url
     end
   end
 
-  desc "Get CLI and application version info"
   skips_pre
+  desc "Get CLI and application version info"
   command :version, :v do |c|
     c.action do |global_options,options,args|
       say "rdio-cli #{Rdio::VERSION} / Rdio #{apple_script('get version of application "Rdio"')}"
     end
   end
 
-  desc "Quit Rdio"
   skips_pre
+  desc "Quit Rdio"
   command :quit, :q do |c|
     c.action do |global_options,options,args|
       bridge.quit
     end
   end
 
-  desc "Authorize Rdio account"
   skips_pre
+  desc "Authorize Rdio account"
   command :authorize, :auth do |c|
     c.action do |global_options,options,args|
       require 'highline/import'
