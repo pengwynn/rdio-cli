@@ -47,6 +47,8 @@ module Rdio
     end
 
     def now_playing(text=nil)
+      return "Nothing playing" if current_track.empty?
+
       text ||= "Now playing: %{track} / %{artist} / %{album}"
       text % {
         :artist => current_artist,

@@ -93,15 +93,21 @@ describe 'Rdio::DesktopBridge' do
 
   context "displaying now playing info" do
 
-    before do
+    it "displays track, artist, and album by default" do
       @bridge.stub(:current_track).and_return("Hurt")
       @bridge.stub(:current_artist).and_return("Johnny Cash")
       @bridge.stub(:current_album).and_return("The Man Comes Around")
-    end
 
-    it "displays track, artist, and album by default" do
       expect(@bridge.now_playing).to \
         eq("Now playing: Hurt / Johnny Cash / The Man Comes Around")
+    end
+
+    it "handles nothing playing" do
+      @bridge.stub(:current_track).and_return('')
+      @bridge.stub(:current_artist).and_return('')
+      @bridge.stub(:current_album).and_return('')
+
+      expect(@bridge.now_playing).to eq("Nothing playing")
     end
 
   end
