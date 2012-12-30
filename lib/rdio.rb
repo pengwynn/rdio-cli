@@ -224,7 +224,7 @@ module Rdio
     @consumer_secret = global[:consumer_secret]
     @access_token    = global[:access_token]
     @access_secret   = global[:access_secret]
-    if api.token.compact.empty?
+    if api.token.nil? || api.token.compact.empty?
       say 'Rdio credentials not found. Please run: rdio authorize'
 
       false
