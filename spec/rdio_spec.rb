@@ -117,24 +117,19 @@ describe Rdio do
     Rdio.run %w(q)
   end
   context "when authenticated" do
-    before do
-      config = {
-        :consumer_key    => 'fup94efx5qgb2uunev7dsdyt',
-        :consumer_secret => 'YdvEwYJsUj5w',
-        :access_key      => 'fczfuy25vf83bzz35hw6p5pc8ft5ur6wsb8u5dcqa5zwbzbwrvfzbudpnwx2b3nz',
-        :access_secret   => 'exyNUP88Ur'
-      }
-      File.open(File.join(ENV['HOME'], '.rdio'), 'w') do |out|
-        YAML.dump(config, out)
-      end
-    end
 
     it "snags the currently playing track to your collection" do
       Rdio.stub(:current_track_key).and_return('t12345')
       Api.any_instance.should_receive(:call).
         with('addToCollection', {:keys => 't12345'})
 
-      Rdio.run ['snag']
+      Rdio.run [
+        '--consumer_key=fup94efx5qgb2uunev7dsdyt',
+        '--consumer_secret=YdvEwYJsUj5w',
+        '--access_token=fczfuy25vf83bzz35hw6p5pc8ft5ur6wsb8u5dcqa5zwbzbwrvfzbudpnwx2b3nz',
+        '--access_secret=exyNUP88Ur',
+        'snag'
+      ]
     end
   end
 
