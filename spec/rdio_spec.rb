@@ -15,8 +15,13 @@ describe Rdio do
   end
 
   context "with an empty config file" do
+
     before do
-      FileUtils.rm_f Dir.glob('tmp/fakehome/.rdio')
+      FileUtils.rm_f Dir.glob(File.join(ENV['HOME'], '.rdio'))
+    end
+
+    after do
+      FileUtils.rm_f Dir.glob(File.join(ENV['HOME'], '.rdio'))
     end
 
     it "prompts for Rdio keys" do
@@ -119,7 +124,7 @@ describe Rdio do
         :access_key      => 'fczfuy25vf83bzz35hw6p5pc8ft5ur6wsb8u5dcqa5zwbzbwrvfzbudpnwx2b3nz',
         :access_secret   => 'exyNUP88Ur'
       }
-      File.open('tmp/fakehome/.rdio', 'w') do |out|
+      File.open(File.join(ENV['HOME'], '.rdio'), 'w') do |out|
         YAML.dump(config, out)
       end
     end
