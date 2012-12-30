@@ -5,13 +5,13 @@ RSpec.configure do |config|
 
   config.order = 'random'
 
-  config.before(:suite) do
+  config.before do
     @original_home = ENV['HOME']
     new_home = File.expand_path("./tmp/fakehome")
     ENV['HOME'] = new_home
   end
 
-  config.after(:suite) do
+  config.after do
     ENV['HOME'] = @original_home
   end
 end
