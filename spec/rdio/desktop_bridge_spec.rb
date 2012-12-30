@@ -40,6 +40,57 @@ describe 'Rdio::DesktopBridge' do
     expect(album).to eq('The Man Comes Around')
   end
 
+  it "sets the volume of Rdio.app" do
+    @bridge.should_receive(:apple_script).
+      with("tell app \"Rdio\" to set the sound volume to 40")
+
+    @bridge.set_volume(40)
+  end
+
+  context "playback" do
+    it "starts playback" do
+      @bridge.should_receive(:apple_script).
+        with("tell app \"Rdio\" to play")
+
+      @bridge.play
+    end
+
+    it "pauses playback" do
+      @bridge.should_receive(:apple_script).
+        with("tell app \"Rdio\" to pause")
+
+      @bridge.pause
+    end
+
+    it "toggles playback" do
+      @bridge.should_receive(:apple_script).
+        with("tell app \"Rdio\" to playpause")
+
+      @bridge.toggle
+    end
+
+    it "skips to the next track" do
+      @bridge.should_receive(:apple_script).
+        with("tell app \"Rdio\" to next track")
+
+      @bridge.next_track
+    end
+
+    it "goes back to the previous track" do
+      @bridge.should_receive(:apple_script).
+        with("tell app \"Rdio\" to previous track")
+
+      @bridge.previous_track
+    end
+  end
+
+  it "exits" do
+    @bridge.should_receive(:apple_script).
+      with("tell app \"Rdio\" to quit")
+
+    @bridge.quit
+  end
+
   context "displaying now playing info" do
 
     before do
@@ -53,6 +104,37 @@ describe 'Rdio::DesktopBridge' do
         eq("Now playing: Hurt / Johnny Cash / The Man Comes Around")
     end
 
+  end
+
+  context "URLs" do
+
+    it "grabs the URL for the current track from Rdio.app" do
+      path = "/artist/Josh_Garrels/album/Love__War__The_Sea_In_Between/track/White_Owl/"
+      @bridge.should_receive(:apple_script).
+        with("tell app \"Rdio\" to rdio url of the current track").
+        and_return(path + "\n")
+
+      expect(@bridge.current_url).to \
+        eq("http://www.rdio.com#{path}")
+    end
+
+    it "does not return a URL when nothing is playing" do
+      @bridge.should_receive(:apple_script).
+        with("tell app \"Rdio\" to rdio url of the current track").
+        and_return("\n")
+
+      expect(@bridge.current_url).to be_nil
+    end
+
+    it "can use the rdio:// scheme" do
+      path = "/artist/Josh_Garrels/album/Love__War__The_Sea_In_Between/track/White_Owl/"
+      @bridge.should_receive(:apple_script).
+        with("tell app \"Rdio\" to rdio url of the current track").
+        and_return(path + "\n")
+
+      expect(@bridge.current_url('rdio')).to \
+        eq("rdio://www.rdio.com#{path}")
+    end
   end
 
 end

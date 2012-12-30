@@ -75,7 +75,7 @@ module Rdio
   desc 'Plays the current track'
   command :play do |c|
     c.action do |global_options,options,args|
-      tell_rdio "play"
+      bridge.play
     end
   end
 
@@ -83,7 +83,7 @@ module Rdio
   skips_pre
   command :pause do |c|
     c.action do |global_options,options,args|
-      tell_rdio "pause"
+      bridge.pause
     end
   end
 
@@ -91,7 +91,7 @@ module Rdio
   skips_pre
   command :toggle do |c|
     c.action do |global_options,options,args|
-      tell_rdio "playpause"
+      bridge.toggle
     end
   end
 
@@ -113,7 +113,7 @@ module Rdio
   skips_pre
   command :next do |c|
     c.action do |global_options,options,args|
-      tell_rdio "next track"
+      bridge.next_track
     end
   end
 
@@ -121,7 +121,7 @@ module Rdio
   skips_pre
   command :previous, :prev do |c|
     c.action do |global_options,options,args|
-      tell_rdio "previous track"
+      bridge.previous_track
     end
   end
 
@@ -140,7 +140,7 @@ module Rdio
   command :volume, :vol do |c|
     c.action do |global_options,options,args|
       level = args.shift.to_i
-      set_volume level
+      bridge.set_volume level
     end
   end
 
@@ -148,7 +148,7 @@ module Rdio
   skips_pre
   command :mute do |c|
     c.action do |global_options,options,args|
-      set_volume 0
+      brdige.set_volume 0
     end
   end
 
@@ -156,7 +156,7 @@ module Rdio
   skips_pre
   command :link do |c|
     c.action do |global_options,options,args|
-      say rdio_url
+      say bridge.current_url
     end
   end
 
@@ -172,7 +172,7 @@ module Rdio
   skips_pre
   command :quit, :q do |c|
     c.action do |global_options,options,args|
-      apple_script "tell application \"Rdio\" to quit"
+      bridge.quit
     end
   end
 
