@@ -6,13 +6,15 @@ RSpec.configure do |config|
   config.order = 'random'
 
   config.before do
-    @original_home = ENV['HOME']
-    new_home = File.expand_path("./tmp/fakehome")
-    ENV['HOME'] = new_home
+    unless ENV['CI']
+      @original_home = ENV['HOME']
+      new_home = File.expand_path("./tmp/fakehome")
+      ENV['HOME'] = new_home
+    end
   end
 
   config.after do
-    ENV['HOME'] = @original_home
+    ENV['HOME'] = @original_home unless ENV['CI']
   end
 end
 
