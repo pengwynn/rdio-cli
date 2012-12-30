@@ -43,26 +43,29 @@ describe Rdio do
     end
   end
 
-  it "returns now playing info" do
-    Rdio.stub(:current_artist).and_return 'Johnny Cash'
-    Rdio.stub(:current_track).and_return 'Hurt'
-    Rdio.stub(:current_album).and_return 'The Man Comes Around'
+  context "now playing" do
 
-    HighLine.any_instance.should_receive(:say).
-      with("Now playing: Hurt / Johnny Cash / The Man Comes Around")
+    before do
+      Rdio::DesktopBridge.any_instance.stub(:current_artist).and_return 'Johnny Cash'
+      Rdio::DesktopBridge.any_instance.stub(:current_track).and_return 'Hurt'
+      Rdio::DesktopBridge.any_instance.stub(:current_album).and_return 'The Man Comes Around'
+    end
 
-    Rdio.run %w(current)
-  end
 
-  it "returns custom formatted now playing info" do
-    Rdio.stub(:current_artist).and_return 'Johnny Cash'
-    Rdio.stub(:current_track).and_return 'Hurt'
-    Rdio.stub(:current_album).and_return 'The Man Comes Around'
+    it "returns now playing info" do
+      HighLine.any_instance.should_receive(:say).
+        with("Now playing: Hurt / Johnny Cash / The Man Comes Around")
 
-    HighLine.any_instance.should_receive(:say).
-      with("Now rocking Hurt by Johnny Cash from the album The Man Comes Around")
+      Rdio.run %w(current)
+    end
 
-    Rdio.run ["current", %Q(Now rocking %{track} by %{artist} from the album %{album})]
+    it "returns custom formatted now playing info" do
+      HighLine.any_instance.should_receive(:say).
+        with("Now rocking Hurt by Johnny Cash from the album The Man Comes Around")
+
+      Rdio.run ["current", %Q(Now rocking %{track} by %{artist} from the album %{album})]
+    end
+
   end
 
   context "when authenticated" do

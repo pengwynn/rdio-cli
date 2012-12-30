@@ -4,6 +4,7 @@ require 'launchy'
 
 require 'api'
 require 'rdio/version'
+require 'rdio/desktop_bridge'
 require 'highline/import'
 
 module Rdio
@@ -12,6 +13,10 @@ module Rdio
   program_desc 'Simple CLI for Rdio'
 
   version Rdio::VERSION
+
+  def self.bridge
+    @bridge ||= Rdio::DesktopBridge.new
+  end
 
   def self.api
     token = @access_token ? [@access_token, @access_secret] : nil
@@ -46,44 +51,6 @@ module Rdio
     File.open(p, 'w' ) do |out|
       YAML.dump rdio_config, out
     end
-  end
-
-  def self.apple_script(cmd)
-    `osascript -e '#{cmd}'`
-  end
-
-  def self.tell_rdio(cmd)
-    apple_script "tell app \"Rdio\" to #{cmd}"
-  end
-
-  def self.current_track
-    tell_rdio('name of the current track').gsub(/\n/, '')
-  end
-
-  def self.current_artist
-    tell_rdio('artist of the current track').gsub(/\n/, '')
-  end
-
-  def self.current_album
-    tell_rdio('album of the current track').gsub(/\n/, '')
-  end
-
-  def self.display_track(text)
-    text = "Now playing: %{track} / %{artist} / %{album}" if text.nil?
-    say (text % {
-      :artist => current_artist,
-      :track  => current_track,
-      :album  => current_album
-    })
-  end
-
-  def self.set_volume(pct = 30)
-    tell_rdio "set the sound volume to #{pct}"
-  end
-
-  def self.rdio_url(protocol = 'http')
-    path = tell_rdio 'rdio url of the current track'
-    "#{protocol}://www.rdio.com#{path}"
   end
 
   def self.current_track_key
@@ -138,7 +105,7 @@ module Rdio
   skips_pre
   command :current do |c|
     c.action do |global_options,options,args|
-      display_track args.first
+      say bridge.now_playing(args.first)
     end
   end
 
