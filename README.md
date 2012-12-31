@@ -66,7 +66,7 @@ COMMANDS
 
 ## TODO
 * `[✓]` <del>Snag current track to collection</del>
-* `[ ]` Snag current album to collection
+* `[✓]` <del>Snag current album to collection</del>
 * `[ ]` Create a playlist
 * `[ ]` Follow a user
 * `[ ]` Tail a user?
