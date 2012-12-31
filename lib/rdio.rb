@@ -54,7 +54,7 @@ module Rdio
   end
 
   def self.current_track_key
-    data = api.call 'getObjectFromUrl', { :url => rdio_url }
+    data = api.call 'getObjectFromUrl', { :url => bridge.current_url }
 
     data['result']['key']
   end
@@ -131,7 +131,7 @@ module Rdio
   command :browse do |c|
     c.action do |global_options,options,args|
       protocol = args.first == 'app' ? 'rdio' : 'http'
-      exec "open '#{rdio_url protocol}'"
+      exec "open '#{bridge.current_url protocol}'"
     end
   end
 
