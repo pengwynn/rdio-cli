@@ -53,10 +53,21 @@ module Rdio
     end
   end
 
+  def self.current_user
+    @current_user ||= api.call('currentUser', :extras => 'lastSongPlayed')['result']
+  end
+
   def self.current_track_key
     data = api.call 'getObjectFromUrl', { :url => bridge.current_url }
 
     data['result']['key']
+  end
+
+  def self.current_album_track_keys
+    current_album_url = current_user['lastSongPlayed']['albumUrl']
+    data = api.call 'getObjectFromUrl', { :url => current_album_url }
+
+    data['result']['trackKeys']
   end
 
   def self.add_to_collection(tracks)
@@ -198,7 +209,7 @@ module Rdio
   desc 'Show the current Rdio user'
   command :user do |c|
     c.action do |global_options,options,args|
-      user = api.call('currentUser')['result']
+      user = current_user
       say "#{user['firstName']} #{user['lastName']}"
     end
   end
@@ -208,7 +219,7 @@ module Rdio
     c.action do |global_options,options,args|
       case args.shift
       when 'album'
-        say 'Not implemented'
+        add_to_collection current_album_track_keys
       when nil
         add_to_collection current_track_key
       end

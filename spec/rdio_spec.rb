@@ -132,6 +132,21 @@ describe Rdio do
         'snag'
       ]
     end
+
+    it "snags the currently playing album tracks to your collection" do
+      Rdio.stub(:current_album_track_keys).and_return(['t12345', 't23456', 't34567'])
+      Api.any_instance.should_receive(:call).
+        with('addToCollection', {:keys => 't12345,t23456,t34567'})
+
+      Rdio.run [
+        '--consumer_key=fup94efx5qgb2uunev7dsdyt',
+        '--consumer_secret=YdvEwYJsUj5w',
+        '--access_token=fczfuy25vf83bzz35hw6p5pc8ft5ur6wsb8u5dcqa5zwbzbwrvfzbudpnwx2b3nz',
+        '--access_secret=exyNUP88Ur',
+        'snag',
+        'album'
+      ]
+    end
   end
 
 end
