@@ -23,6 +23,44 @@ $ rdio current "♫ %{track} ♫"
 ♫ All The Roadrunning ♫
 ```
 
+### Lyrics
+
+Plain text, terminal-friendly lyrics are served up via [makeitpersonal.co][]:
+
+```
+~ rdio current
+Now playing: That Old Time Feeling / Rodney Crowell / This One's for Him: A Tribute to Guy Clark
+
+~ rdio lyrics
+Sorry, We don't have lyrics for this song yet.
+
+~ rdio lyrics --artist="Guy Clark"
+
+And that old time feeling goes sneakin' down the hall
+Like an old gray cat in winter, keepin' close to the wall
+And that old time feeling comes stumblin' up the street
+Like an old salesman kickin' the papers from his feet
+
+And that old time feeling draws circles around the block
+Like old women with no children, holdin' hands with the clock
+And that old time feeling falls on its face in the park
+Like an old wino prayin' he can make it till it's dark
+
+And that old time feeling comes and goes in the rain
+Like an old man with his checkers, dyin' to find a game
+And that old time feeling plays for beer in bars
+Like an old blues-time picker who don't recall who you are
+
+And that old time feeling limps through the night on a crutch
+Like an old soldier wonderin' if he's paid too much
+And that old time feeling rocks and spits and cries
+Like an old lover rememberin' the girl with the clear blue eyes
+
+And that old time feeling goes sneakin' down the hall
+Like an old gray cat in winter, keepin' close to the wall
+
+```
+
 ### Full usage help
 
 ```
@@ -86,3 +124,4 @@ Copyright (c) 2012 Wynn Netherland. See [LICENSE][] for details.
 [Drew Stokes]: https://github.com/dstokes
 [node-rdio]: https://github.com/dstokes/rdio-cli
 [GLI]: https://github.com/davetron5000/gli
+[makeitpersonal.co]: http://makeitpersonal.co
