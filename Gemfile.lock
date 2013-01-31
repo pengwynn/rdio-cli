@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rdio-cli (0.0.1)
+    rdio-cli (0.1.0)
       gli (= 2.5.2)
       highline (~> 1.6.15)
       launchy (~> 2.1.2)
