@@ -51,6 +51,7 @@ COMMANDS
     help            - Shows a list of commands or help for one command
     initconfig      - Initialize the config file using current global options
     link            - Get a shareable link for the current track
+    lyrics          - Show lyrics for a track
     mute            - Mute the Rdio player
     next            - Skip to next track
     pause           - Pause the player
