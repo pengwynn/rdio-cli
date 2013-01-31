@@ -37,6 +37,15 @@ module Rdio
     say "You're all set. see `rdio help` for usage"
   end
 
+  def self.lyrics_for(artist, title)
+    uri = URI('http://makeitpersonal.co/lyrics')
+    params = { :artist => artist, :title => title }
+    uri.query = URI.encode_www_form(params)
+
+    res = Net::HTTP.get_response(uri)
+    return res.body
+  end
+
   def self.rdio_config
     {
      :consumer_key    => @consumer_key,
@@ -201,6 +210,18 @@ module Rdio
       if @consumer_key && @consumer_secret
         authorize_api
       end
+    end
+  end
+
+  skips_pre
+  desc 'Show lyrics for a track'
+  command :lyrics do |c|
+    c.flag :artist
+    c.flag :title
+    c.action do |global_options,options,args|
+      artist = options[:artist] || bridge.current_artist
+      title = options[:title] || bridge.current_track
+      say lyrics_for(artist, title)
     end
   end
 

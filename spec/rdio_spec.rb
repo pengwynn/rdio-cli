@@ -149,4 +149,37 @@ describe Rdio do
     end
   end
 
+  context "lyrics" do
+
+    before do
+      Rdio::DesktopBridge.any_instance.stub(:current_artist).and_return 'Johnny Cash'
+      Rdio::DesktopBridge.any_instance.stub(:current_track).and_return 'Hurt'
+    end
+
+    it "looks up lyrics for current track" do
+      stub = stub_get("http://makeitpersonal.co/lyrics?artist=Johnny%20Cash&title=Hurt").
+               to_return(:body => fixture('hurt.txt'))
+
+      HighLine.any_instance.should_receive(:say)
+      Rdio.run %w(lyrics)
+
+      expect(stub).to have_been_made
+    end
+
+    it "looks up lyrics for any artist and title" do
+      stub = stub_get("http://makeitpersonal.co/lyrics?artist=Eric%20Clapton&title=Layla").
+               to_return(:body => fixture('layla.txt'))
+
+      HighLine.any_instance.should_receive(:say)
+      Rdio.run [
+        'lyrics',
+        '--artist=Eric Clapton',
+        '--title=Layla'
+      ]
+
+      expect(stub).to have_been_made
+    end
+
+  end
+
 end
