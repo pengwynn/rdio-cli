@@ -87,10 +87,14 @@ module Rdio
 
   config_file '.rdio'
 
-  flag :consumer_key
-  flag :consumer_secret
-  flag :access_token
-  flag :access_secret
+  desc 'Rdio API consumer key'
+  flag :consumer_key, :mask => true
+  desc 'Rdio API consumer secret'
+  flag :consumer_secret, :mask => true
+  desc 'Rdio API access token'
+  flag :access_token, :mask => true
+  desc 'Rdio API access secret'
+  flag :access_secret, :mask => true
 
   skips_pre
   desc 'Plays the current track'
