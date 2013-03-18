@@ -61,6 +61,31 @@ Like an old gray cat in winter, keepin' close to the wall
 
 ```
 
+### Shows
+
+Upcoming events are served via [last.fm/api][]
+
+```
+~ rdio current
+Now playing: That Old Time Feeling / Rodney Crowell / This One's for Him: A Tribute to Guy Clark
+
+~ rdio shows
+Here are 10 upcoming events for Rodney Crowell
+Toronto             Canada          Fri, 22 Mar 2013 20:00:00 
+North Bethesda, MD  United States   Fri, 29 Mar 2013 19:30:00 
+London              United Kingdom  Thu, 09 May 2013 20:00:00 
+Birmingham          United Kingdom  Fri, 10 May 2013 16:16:01 
+Belfast             Ireland         Sun, 12 May 2013 19:30:00 
+Dublin              Ireland         Mon, 13 May 2013 20:00:00 
+Brussels            Belgium         Mon, 20 May 2013 13:20:01 
+Paris               France          Wed, 22 May 2013 20:00:00 
+København C         Denmark         Sun, 26 May 2013 20:00:00 
+Berlin              Germany         Thu, 30 May 2013 00:38:01
+
+~ rdio shows --artist="Johnny Cash"
+No upcoming events for Johnny Cash
+```
+
 ### Full usage help
 
 ```
@@ -96,6 +121,7 @@ COMMANDS
     play            - Plays the current track
     previous, prev  - Play previous track
     quit, q         - Quit Rdio
+    shows           - Show upcoming events for an artist
     snag            - Add the current track or album to your collection
     toggle          - Toggle playback
     user            - Show the current Rdio user
@@ -125,3 +151,4 @@ Copyright (c) 2012 Wynn Netherland. See [LICENSE][] for details.
 [node-rdio]: https://github.com/dstokes/rdio-cli
 [GLI]: https://github.com/davetron5000/gli
 [makeitpersonal.co]: http://makeitpersonal.co
+[last.fm/api]: http://www.last.fm/api

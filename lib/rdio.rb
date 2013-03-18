@@ -46,6 +46,46 @@ module Rdio
     return res.body
   end
 
+  def self.shows_for(artist, count)
+    uri = URI('http://ws.audioscrobbler.com/2.0')
+    params = { :method => 'artist.getEvents', :artist => artist, :limit => count, :format => 'json', :autocorrect => 1, :api_key => '3c3e4b39c2aedcac5d745c70a898ee76' }
+    uri.query = URI.encode_www_form(params)
+    res = Net::HTTP.get_response(uri)
+
+    json = JSON.parse(res.body)
+    return "Sorry, I’ve never heard of #{artist}" if json['error'] == 6
+
+    events = json['events']['event']
+    events = [events] if events.is_a?(Hash)
+    return "No upcoming events for #{artist}" if !events
+
+    corrected_artist_name = json['events']['@attr']['artist']
+
+    cities = []
+    countries = []
+    events.each do |event|
+      cities << event['venue']['location']['city']
+      countries << event['venue']['location']['country']
+    end
+
+    longest_city = cities.inject { |a, b| a.length > b.length ? a : b }
+    longest_country = countries.inject { |a, b| a.length > b.length ? a : b }
+
+    events.map! do |event|
+      location = event['venue']['location']
+
+      city = location['city']
+      city_spaces = (0..longest_city.length - city.length).map{' '}.join('')
+
+      country = location['country']
+      country_spaces = (0..longest_country.length - country.length).map{' '}.join('')
+
+      "#{city}#{city_spaces} #{country}#{country_spaces} #{event['startDate']} #{event['startTime']}"
+    end
+
+    "Here are #{count} upcoming events for #{corrected_artist_name}\n#{events.join("\n")}\n"
+  end
+
   def self.rdio_config
     {
      :consumer_key    => @consumer_key,
@@ -226,6 +266,18 @@ module Rdio
       artist = options[:artist] || bridge.current_artist
       title = options[:title] || bridge.current_track
       say lyrics_for(artist, title)
+    end
+  end
+
+  skips_pre
+  desc 'Show upcoming events for an artist'
+  command :shows do |c|
+    c.flag :artist
+    c.flag :count, :default_value => 10
+    c.action do |global_options,options,args|
+      artist = options[:artist] || bridge.current_artist
+      count = options[:count]
+      say shows_for(artist, count)
     end
   end
 

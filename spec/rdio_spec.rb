@@ -182,4 +182,35 @@ describe Rdio do
 
   end
 
+  context "shows" do
+
+    before do
+      Rdio::DesktopBridge.any_instance.stub(:current_artist).and_return 'The Black Keys'
+    end
+
+    it "looks up upcoming shows for current artist" do
+      stub = stub_get("http://ws.audioscrobbler.com/2.0?method=artist.getEvents&artist=The+Black+Keys&limit=10&format=json&autocorrect=1&api_key=3c3e4b39c2aedcac5d745c70a898ee76").
+               to_return(:body => fixture('the_black_keys.txt'))
+
+      HighLine.any_instance.should_receive(:say)
+      Rdio.run %w(shows)
+
+      expect(stub).to have_been_made
+    end
+
+    it "looks up upcoming shows for any artist" do
+      stub = stub_get("http://ws.audioscrobbler.com/2.0?method=artist.getEvents&artist=Eric+Clapton&limit=10&format=json&autocorrect=1&api_key=3c3e4b39c2aedcac5d745c70a898ee76").
+               to_return(:body => fixture('eric_clapton.txt'))
+
+      HighLine.any_instance.should_receive(:say)
+      Rdio.run [
+        'shows',
+        '--artist=Eric Clapton'
+      ]
+
+      expect(stub).to have_been_made
+    end
+
+  end
+
 end
