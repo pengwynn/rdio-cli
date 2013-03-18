@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'gli'
 require 'yaml'
 require 'launchy'
