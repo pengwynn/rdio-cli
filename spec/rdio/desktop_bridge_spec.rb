@@ -6,89 +6,143 @@ describe Rdio::DesktopBridge do
     @bridge = Rdio::DesktopBridge.new
   end
 
-  it "sends AppleScript to Rdio.app" do
-    @bridge.should_receive(:apple_script).
-      with("tell app \"Rdio\" to name of the current track")
-
-    @bridge.tell_rdio("name of the current track")
-  end
-
-  it "gets the name of the current track" do
-    @bridge.should_receive(:apple_script).
-      with("tell app \"Rdio\" to name of the current track").
-      and_return("Hurt\n")
-
-    track = @bridge.current_track
-    expect(track).to eq('Hurt')
-  end
-
-  it "gets the name of the current artist" do
-    @bridge.should_receive(:apple_script).
-      with("tell app \"Rdio\" to artist of the current track").
-      and_return("Johnny Cash\n")
-
-    artist = @bridge.current_artist
-    expect(artist).to eq('Johnny Cash')
-  end
-
-  it "gets the name of the current album" do
-    @bridge.should_receive(:apple_script).
-      with("tell app \"Rdio\" to album of the current track").
-      and_return("The Man Comes Around\n")
-
-    album = @bridge.current_album
-    expect(album).to eq('The Man Comes Around')
-  end
-
-  it "sets the volume of Rdio.app" do
-    @bridge.should_receive(:apple_script).
-      with("tell app \"Rdio\" to set the sound volume to 40")
-
-    @bridge.set_volume(40)
-  end
-
-  context "playback" do
-    it "starts playback" do
+  context "with Rdio app running" do
+    before do
       @bridge.should_receive(:apple_script).
-        with("tell app \"Rdio\" to play")
-
-      @bridge.play
+        with('tell application "System Events" to get the name of every process whose background only is false').
+        and_return('Finder, Rdio, Something Else')
     end
 
-    it "pauses playback" do
+    it "sends AppleScript to Rdio.app" do
       @bridge.should_receive(:apple_script).
-        with("tell app \"Rdio\" to pause")
+        with("tell app \"Rdio\" to name of the current track")
 
-      @bridge.pause
+      @bridge.tell_rdio("name of the current track")
     end
 
-    it "toggles playback" do
+    it "gets the name of the current track" do
       @bridge.should_receive(:apple_script).
-        with("tell app \"Rdio\" to playpause")
+        with("tell app \"Rdio\" to name of the current track").
+        and_return("Hurt\n")
 
-      @bridge.toggle
+      track = @bridge.current_track
+      expect(track).to eq('Hurt')
     end
 
-    it "skips to the next track" do
+    it "gets the name of the current artist" do
       @bridge.should_receive(:apple_script).
-        with("tell app \"Rdio\" to next track")
+        with("tell app \"Rdio\" to artist of the current track").
+        and_return("Johnny Cash\n")
 
-      @bridge.next_track
+      artist = @bridge.current_artist
+      expect(artist).to eq('Johnny Cash')
     end
 
-    it "goes back to the previous track" do
+    it "gets the name of the current album" do
       @bridge.should_receive(:apple_script).
-        with("tell app \"Rdio\" to previous track")
+        with("tell app \"Rdio\" to album of the current track").
+        and_return("The Man Comes Around\n")
 
-      @bridge.previous_track
+      album = @bridge.current_album
+      expect(album).to eq('The Man Comes Around')
+    end
+
+    it "sets the volume of Rdio.app" do
+      @bridge.should_receive(:apple_script).
+        with("tell app \"Rdio\" to set the sound volume to 40")
+
+      @bridge.set_volume(40)
+    end
+
+    context "playback" do
+      it "starts playback" do
+        @bridge.should_receive(:apple_script).
+          with("tell app \"Rdio\" to play")
+
+        @bridge.play
+      end
+
+      it "pauses playback" do
+        @bridge.should_receive(:apple_script).
+          with("tell app \"Rdio\" to pause")
+
+        @bridge.pause
+      end
+
+      it "toggles playback" do
+        @bridge.should_receive(:apple_script).
+          with("tell app \"Rdio\" to playpause")
+
+        @bridge.toggle
+      end
+
+      it "skips to the next track" do
+        @bridge.should_receive(:apple_script).
+          with("tell app \"Rdio\" to next track")
+
+        @bridge.next_track
+      end
+
+      it "goes back to the previous track" do
+        @bridge.should_receive(:apple_script).
+          with("tell app \"Rdio\" to previous track")
+
+        @bridge.previous_track
+      end
+
+    end
+
+    it "exits" do
+      @bridge.should_receive(:apple_script).
+        with("tell app \"Rdio\" to quit")
+
+      @bridge.quit
+    end
+
+    context "URLs" do
+      it "grabs the URL for the current track from Rdio.app" do
+        path = "/artist/Josh_Garrels/album/Love__War__The_Sea_In_Between/track/White_Owl/"
+        @bridge.should_receive(:apple_script).
+          with("tell app \"Rdio\" to rdio url of the current track").
+          and_return(path + "\n")
+
+        expect(@bridge.current_url).to \
+          eq("http://www.rdio.com#{path}")
+      end
+
+      it "does not return a URL when nothing is playing" do
+        @bridge.should_receive(:apple_script).
+          with("tell app \"Rdio\" to rdio url of the current track").
+          and_return("\n")
+
+        expect(@bridge.current_url).to be_nil
+      end
+
+      it "can use the rdio:// scheme" do
+        path = "/artist/Josh_Garrels/album/Love__War__The_Sea_In_Between/track/White_Owl/"
+        @bridge.should_receive(:apple_script).
+          with("tell app \"Rdio\" to rdio url of the current track").
+          and_return(path + "\n")
+
+        expect(@bridge.current_url('rdio')).to \
+          eq("rdio://www.rdio.com#{path}")
+      end
     end
   end
 
-  it "exits" do
-    @bridge.should_receive(:apple_script).
-      with("tell app \"Rdio\" to quit")
+  context "with Oi Rdio app running" do
+    before do
+      @bridge.should_receive(:apple_script).
+        with('tell application "System Events" to get the name of every process whose background only is false').
+        and_return('Finder, Oi Rdio, Something Else')
+    end
 
-    @bridge.quit
+    it "sends AppleScript to Rdio.app" do
+      @bridge.should_receive(:apple_script).
+        with("tell app \"Oi Rdio\" to name of the current track")
+
+      @bridge.tell_rdio("name of the current track")
+    end
   end
 
   context "displaying now playing info" do
@@ -110,37 +164,6 @@ describe Rdio::DesktopBridge do
       expect(@bridge.now_playing).to eq("Nothing playing")
     end
 
-  end
-
-  context "URLs" do
-
-    it "grabs the URL for the current track from Rdio.app" do
-      path = "/artist/Josh_Garrels/album/Love__War__The_Sea_In_Between/track/White_Owl/"
-      @bridge.should_receive(:apple_script).
-        with("tell app \"Rdio\" to rdio url of the current track").
-        and_return(path + "\n")
-
-      expect(@bridge.current_url).to \
-        eq("http://www.rdio.com#{path}")
-    end
-
-    it "does not return a URL when nothing is playing" do
-      @bridge.should_receive(:apple_script).
-        with("tell app \"Rdio\" to rdio url of the current track").
-        and_return("\n")
-
-      expect(@bridge.current_url).to be_nil
-    end
-
-    it "can use the rdio:// scheme" do
-      path = "/artist/Josh_Garrels/album/Love__War__The_Sea_In_Between/track/White_Owl/"
-      @bridge.should_receive(:apple_script).
-        with("tell app \"Rdio\" to rdio url of the current track").
-        and_return(path + "\n")
-
-      expect(@bridge.current_url('rdio')).to \
-        eq("rdio://www.rdio.com#{path}")
-    end
   end
 
 end

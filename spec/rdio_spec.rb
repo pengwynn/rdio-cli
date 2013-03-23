@@ -73,48 +73,56 @@ describe Rdio do
 
   end
 
-  context "playback" do
-    it "starts playback" do
+  context "with Rdio app running" do
+    before do
       Rdio::DesktopBridge.any_instance.should_receive(:apple_script).
-        with("tell app \"Rdio\" to play")
-
-      Rdio.run %w(play)
+        with('tell application "System Events" to get the name of every process whose background only is false').
+        and_return('Finder, Rdio, Something Else')
     end
 
-    it "pauses playback" do
-      Rdio::DesktopBridge.any_instance.should_receive(:apple_script).
-        with("tell app \"Rdio\" to pause")
+    context "playback" do
+      it "starts playback" do
+        Rdio::DesktopBridge.any_instance.should_receive(:apple_script).
+          with("tell app \"Rdio\" to play")
 
-      Rdio.run %w(pause)
+        Rdio.run %w(play)
+      end
+
+      it "pauses playback" do
+        Rdio::DesktopBridge.any_instance.should_receive(:apple_script).
+          with("tell app \"Rdio\" to pause")
+
+        Rdio.run %w(pause)
+      end
+
+      it "toggles playback" do
+        Rdio::DesktopBridge.any_instance.should_receive(:apple_script).
+          with("tell app \"Rdio\" to playpause")
+
+        Rdio.run %w(toggle)
+      end
+
+      it "skips to the next track" do
+        Rdio::DesktopBridge.any_instance.should_receive(:apple_script).
+          with("tell app \"Rdio\" to next track")
+
+        Rdio.run %w(next)
+      end
+
+      it "goes back to the previous track" do
+        Rdio::DesktopBridge.any_instance.should_receive(:apple_script).
+          with("tell app \"Rdio\" to previous track")
+
+        Rdio.run %w(previous)
+      end
     end
 
-    it "toggles playback" do
+    it "exits" do
       Rdio::DesktopBridge.any_instance.should_receive(:apple_script).
-        with("tell app \"Rdio\" to playpause")
+        with("tell app \"Rdio\" to quit")
 
-      Rdio.run %w(toggle)
+      Rdio.run %w(q)
     end
-
-    it "skips to the next track" do
-      Rdio::DesktopBridge.any_instance.should_receive(:apple_script).
-        with("tell app \"Rdio\" to next track")
-
-      Rdio.run %w(next)
-    end
-
-    it "goes back to the previous track" do
-      Rdio::DesktopBridge.any_instance.should_receive(:apple_script).
-        with("tell app \"Rdio\" to previous track")
-
-      Rdio.run %w(previous)
-    end
-  end
-
-  it "exits" do
-    Rdio::DesktopBridge.any_instance.should_receive(:apple_script).
-      with("tell app \"Rdio\" to quit")
-
-    Rdio.run %w(q)
   end
 
   context "when authenticated" do
