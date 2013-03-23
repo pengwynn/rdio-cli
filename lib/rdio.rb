@@ -214,7 +214,7 @@ module Rdio
   desc 'Mute the Rdio player'
   command :mute do |c|
     c.action do |global_options,options,args|
-      brdige.set_volume 0
+      bridge.set_volume 0
     end
   end
 
