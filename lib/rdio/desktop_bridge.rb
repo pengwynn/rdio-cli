@@ -11,7 +11,7 @@ module Rdio
 
     def app_name
       running_apps = apple_script 'tell application "System Events" to get the name of every process whose background only is false'
-      running_apps.split(', ').grep(/Rdio/)[0] || 'Rdio'
+      running_apps.split(', ').grep(/Rdio/)[0].to_s.strip || 'Rdio'
     end
 
     def quit
