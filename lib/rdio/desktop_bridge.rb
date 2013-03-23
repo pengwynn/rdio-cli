@@ -6,7 +6,12 @@ module Rdio
     end
 
     def tell_rdio(cmd)
-      apple_script "tell app \"Rdio\" to #{cmd}"
+      apple_script "tell app \"#{app_name}\" to #{cmd}"
+    end
+
+    def app_name
+      running_apps = apple_script 'tell application "System Events" to get the name of every process whose background only is false'
+      running_apps.split(', ').grep(/Rdio/)[0] || 'Rdio'
     end
 
     def quit
