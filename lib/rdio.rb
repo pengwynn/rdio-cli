@@ -40,7 +40,7 @@ module Rdio
 
   def self.lyrics_for(artist, title)
     uri = URI('http://makeitpersonal.co/lyrics')
-    params = { :artist => artist, :title => title }
+    params = { :artist => artist.gsub(/[<>]/, ' '), :title => title.gsub(/[<>]/, ' ') }
     uri.query = URI.encode_www_form(params)
 
     res = Net::HTTP.get_response(uri)
