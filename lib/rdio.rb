@@ -21,7 +21,7 @@ module Rdio
 
   def self.api
     token = @access_token ? [@access_token, @access_secret] : nil
-    @api = Api.new \
+    @api ||= Api.new \
       [@consumer_key, @consumer_secret],
       token
   end
@@ -124,6 +124,22 @@ module Rdio
     tracks = Array(tracks)
 
     api.call 'addToCollection', { :keys => tracks.join(',') }
+  end
+
+  def self.add_friend(vanity_or_email)
+    if vanity_or_email.include? "@"
+      data = api.call 'findUser', { :email => vanity_or_email }
+    else
+      data = api.call 'findUser', { :vanityName => vanity_or_email }
+    end
+
+    unless data['result']
+      return "Could not find user #{vanity_or_email}."
+    end
+
+    data = api.call 'addFriend', user: data['result']['key']
+    data['result'] ? "You are now friends with #{vanity_or_email}." :
+      "Rdio said you were unable to become friends with #{vanity_or_email}."
   end
 
   config_file '.rdio'
@@ -300,6 +316,16 @@ module Rdio
         add_to_collection current_album_track_keys
       when nil
         add_to_collection current_track_key
+      end
+    end
+  end
+
+  desc 'Manage your friends'
+  command :friends do |c|
+    c.desc 'Add a friend'
+    c.command :add do |add|
+      add.action do |global_options,options,args|
+        say add_friend args.first
       end
     end
   end
