@@ -126,34 +126,83 @@ describe Rdio do
   end
 
   context "when authenticated" do
+    let(:api) { Rdio.api }
+    let(:consumer_key) { "fup94efx5qgb2uunev7dsdyt" }
+    let(:consumer_secret) { "YdvEwYJsUj5w" }
+    let(:access_token) { "fczfuy25vf83bzz35hw6p5pc8ft5ur6wsb8u5dcqa5zwbzbwrvfzbudpnwx2b3nz" }
+    let(:access_secret) { "exyNUP88Ur" }
+    let(:auth_args) { ["--consumer_key=#{consumer_key}",
+                       "--consumer_secret=#{consumer_secret}",
+                       "--access_token=#{access_token}",
+                       "--access_secret=#{access_secret}"] }
+
+    def run(*args)
+      Rdio.run auth_args.concat(args)
+    end
+
+    before(:each) do
+      api.token = [:present]
+    end
 
     it "snags the currently playing track to your collection" do
       Rdio.stub(:current_track_key).and_return('t12345')
-      Api.any_instance.should_receive(:call).
+      api.should_receive(:call).
         with('addToCollection', {:keys => 't12345'})
 
-      Rdio.run [
-        '--consumer_key=fup94efx5qgb2uunev7dsdyt',
-        '--consumer_secret=YdvEwYJsUj5w',
-        '--access_token=fczfuy25vf83bzz35hw6p5pc8ft5ur6wsb8u5dcqa5zwbzbwrvfzbudpnwx2b3nz',
-        '--access_secret=exyNUP88Ur',
-        'snag'
-      ]
+      run 'snag'
     end
 
     it "snags the currently playing album tracks to your collection" do
       Rdio.stub(:current_album_track_keys).and_return(['t12345', 't23456', 't34567'])
-      Api.any_instance.should_receive(:call).
+      api.should_receive(:call).
         with('addToCollection', {:keys => 't12345,t23456,t34567'})
 
-      Rdio.run [
-        '--consumer_key=fup94efx5qgb2uunev7dsdyt',
-        '--consumer_secret=YdvEwYJsUj5w',
-        '--access_token=fczfuy25vf83bzz35hw6p5pc8ft5ur6wsb8u5dcqa5zwbzbwrvfzbudpnwx2b3nz',
-        '--access_secret=exyNUP88Ur',
-        'snag',
-        'album'
-      ]
+      run 'snag', 'album'
+    end
+
+    context "friends" do
+      it "handles when it can't find a friend" do
+        HighLine.any_instance.should_receive(:say).
+          with("Could not find user nonexistent.")
+        api.should_receive(:call).with('findUser', {:vanityName => 'nonexistent'}).
+          and_return({ 'result' => nil })
+        api.should_not_receive(:call).with('addFriend', {:user => 'pengwynn_key'})
+
+        run 'friends', 'add', 'nonexistent'
+      end
+
+      it "adds a friend unsuccessfully" do
+        HighLine.any_instance.should_receive(:say).
+          with("Rdio said you were unable to become friends with obama.")
+         api.should_receive(:call).with('findUser', {:vanityName => 'obama'}).
+          and_return({ 'result' => { 'key' => 'obama_key' } })
+        api.should_receive(:call).with('addFriend', {:user => 'obama_key'}).
+          and_return({ 'result' => false })
+
+        run 'friends', 'add', 'obama'
+      end
+
+      it "adds a friend by vanityName successfully" do
+        HighLine.any_instance.should_receive(:say).
+          with("You are now friends with pengwynn.")
+         api.should_receive(:call).with('findUser', {:vanityName => 'pengwynn'}).
+          and_return({ 'result' => { 'key' => 'pengwynn_key' } })
+        api.should_receive(:call).with('addFriend', {:user => 'pengwynn_key'}).
+          and_return({ 'result' => true })
+
+        run 'friends', 'add', 'pengwynn'
+      end
+
+      it "adds a friend by email successfully" do
+        HighLine.any_instance.should_receive(:say).
+          with("You are now friends with pengwynn@github.com.")
+         api.should_receive(:call).with('findUser', {:email => 'pengwynn@github.com'}).
+          and_return({ 'result' => { 'key' => 'pengwynn_key' } })
+        api.should_receive(:call).with('addFriend', {:user => 'pengwynn_key'}).
+          and_return({ 'result' => true })
+
+        run 'friends', 'add', 'pengwynn@github.com'
+      end
     end
   end
 
