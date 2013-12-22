@@ -137,7 +137,7 @@ module Rdio
       return "Could not find user #{vanity_or_email}."
     end
 
-    data = api.call 'addFriend', user: data['result']['key']
+    data = api.call 'addFriend', :user => data['result']['key']
     data['result'] ? "You are now friends with #{vanity_or_email}." :
       "Rdio said you were unable to become friends with #{vanity_or_email}."
   end
