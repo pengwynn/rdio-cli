@@ -1,4 +1,27 @@
 #!/usr/bin/env ruby
 require 'rdio'
+require 'benchmark'
 
-exit Rdio.run(ARGV)
+trap "SIGINT" do
+  exit 0
+end
+
+trap "INT" do
+  exit 0
+end
+
+if ARGV[0] == 'c' || ARGV[0] == 'console'
+  loop do
+    print '> '
+    input = $stdin.gets.chomp
+
+    if input == 'exit'
+      exit
+    else
+      args = input.split(' ')
+      Rdio.run(args)
+    end
+  end
+else
+  Rdio.run(ARGV)
+end
