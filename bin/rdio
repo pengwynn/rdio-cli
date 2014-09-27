@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 require 'rdio'
-require 'benchmark'
 
 trap "SIGINT" do
   exit 0
@@ -18,10 +17,8 @@ if ARGV[0] == 'c' || ARGV[0] == 'console'
     if input == 'exit'
       exit
     else
-      puts Benchmark.measure {
-        args = input.split(' ')
-        Rdio.run(args)
-      }
+      args = input.split(' ')
+      Rdio.run(args)
     end
   end
 else
