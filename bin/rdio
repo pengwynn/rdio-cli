@@ -9,7 +9,7 @@ trap "INT" do
   exit 0
 end
 
-if ARGV[0] == 'c' || ARGV[0] == 'console'
+if ARGV[0] == 'console'
   loop do
     print '> '
     input = $stdin.gets.chomp
