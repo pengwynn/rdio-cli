@@ -86,7 +86,13 @@ module Rdio
       "#{city}#{city_spaces} #{country}#{country_spaces} #{event['startDate']} #{event['startTime']} #{cancelled}"
     end
 
-    "Here are #{count} upcoming events for #{corrected_artist_name}\n#{events.join("\n")}\n"
+    if events.size > 1
+      preamble = "Here are #{events.size} upcoming events"
+    else
+      preamble = "Here is the upcoming event"
+    end
+
+    "#{preamble} for #{corrected_artist_name}:\n#{events.join("\n")}\n"
   end
 
   def self.rdio_config
