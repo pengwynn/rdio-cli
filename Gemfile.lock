@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rdio-cli (1.2.1)
+    rdio-cli (1.2.2)
       gli (= 2.5.2)
       highline (~> 1.6.15)
       launchy (~> 2.1.2)
@@ -22,7 +22,7 @@ GEM
     guard-rspec (2.5.1)
       guard (>= 1.1)
       rspec (~> 2.11)
-    highline (1.6.15)
+    highline (1.6.21)
     launchy (2.1.2)
       addressable (~> 2.3)
     listen (0.6.0)

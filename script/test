@@ -5,3 +5,5 @@ set -e
 echo "===> Bundling..."
 script/bootstrap --quiet
 echo "===> Running specs..."
+
+bundle exec rspec
