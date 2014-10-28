@@ -81,7 +81,9 @@ module Rdio
       country = location['country']
       country_spaces = (0..longest_country.length - country.length).map{' '}.join('')
 
-      "#{city}#{city_spaces} #{country}#{country_spaces} #{event['startDate']} #{event['startTime']}"
+      cancelled = event['cancelled'] == '1' ? 'CANCELLED' : ''
+
+      "#{city}#{city_spaces} #{country}#{country_spaces} #{event['startDate']} #{event['startTime']} #{cancelled}"
     end
 
     "Here are #{count} upcoming events for #{corrected_artist_name}\n#{events.join("\n")}\n"
