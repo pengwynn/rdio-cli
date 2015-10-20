@@ -86,10 +86,10 @@ module Rdio
       "#{city}#{city_spaces} #{country}#{country_spaces} #{event['startDate']} #{event['startTime']} #{cancelled}"
     end
 
-    if events.size > 1
-      preamble = "Here are #{events.size} upcoming events"
+    preamble = if events.size > 1
+      "Here are #{events.size} upcoming events"
     else
-      preamble = "Here is the upcoming event"
+      "Here is the upcoming event"
     end
 
     "#{preamble} for #{corrected_artist_name}:\n#{events.join("\n")}\n"
@@ -135,10 +135,10 @@ module Rdio
   end
 
   def self.add_friend(vanity_or_email)
-    if vanity_or_email.include? "@"
-      data = api.call 'findUser', { :email => vanity_or_email }
+    data = if vanity_or_email.include? "@"
+      api.call 'findUser', { :email => vanity_or_email }
     else
-      data = api.call 'findUser', { :vanityName => vanity_or_email }
+      api.call 'findUser', { :vanityName => vanity_or_email }
     end
 
     unless data['result']
